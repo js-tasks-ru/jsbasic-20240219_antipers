@@ -21,7 +21,6 @@ function checkSpam(str) {
   // else return false;
 }
 
-console.log(checkSpam('1XBET'));
 
 
 

@@ -10,7 +10,18 @@ function print(text) {
  * чтобы функция sayHello работала корректно
  */
 function isValid(name) {
-  // ваш код...
+  let regexp = /\s/;
+  //  Вариант 1 обычный c if
+
+  // if ((name == null) || (name.length < 4) || (name.match(regexp))) {
+  //   return false;
+  // } else {
+  //   return true;
+  // }
+
+  //Вариант 2 с тернарным оператором-- 
+  return ((name == null)) || (name.length < 4) || (name.match(regexp) ) ? false : true;
+
 }
 
 function sayHello() {
@@ -22,3 +33,6 @@ function sayHello() {
     print('Некорректное имя');
   }
 }
+
+
+sayHello();

@@ -11,16 +11,16 @@ function print(text) {
  */
 function isValid(name) {
   let regexp = /\s/;
-  //  Вариант 1 обычный
+  //  Вариант 1 обычный c if
 
-  if ((name == null) || (name.length < 4) || (name.match(regexp))) {
-    return false;
-  } else {
-    return true;
-  }
+  // if ((name == null) || (name.length < 4) || (name.match(regexp))) {
+  //   return false;
+  // } else {
+  //   return true;
+  // }
 
-  //Вариант 2 с тернарным оператором-- НЕ ПОЛУЧИЛОСЬ
-  //((name !== null)) || (name.length > 4) || (name.match(regexp) == false) ? true : false;
+  //Вариант 2 с тернарным оператором-- 
+  return ((name == null)) || (name.length < 4) || (name.match(regexp) ) ? false : true;
 
 }
 

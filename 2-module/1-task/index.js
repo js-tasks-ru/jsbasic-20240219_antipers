@@ -11,14 +11,13 @@ function sumSalary(salaries) {
   let cash = 0;
   for (let key in salaries) {
     if (Number.isFinite(salaries[key])) {
-      cash = salaries[key] + cash;
+      cash += salaries[key];
     }
   }
   if (cash === 0) { return 0 }
   else return cash
 }
 
-console.log(sumSalary(salaries))
 
 
 

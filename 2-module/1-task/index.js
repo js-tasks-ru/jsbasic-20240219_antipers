@@ -17,18 +17,3 @@ function sumSalary(salaries) {
   if (cash === 0) { return 0 }
   else return cash
 }
-
-
-
-
-
-
-
-/*let cash = 0;
-for (let key in salaries) {
-  if (Number.isFinite(salaries[key])) {
-    cash = salaries[key] + cash;
-  }
-}
-if (cash === 0) { return 0 }
-else return cash*/

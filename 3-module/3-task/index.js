@@ -26,21 +26,3 @@ function camelize(str) {
 
 let string = 'list-style-image';
 camelize(string);
-
-
-
-// короткая запись
-// function camelize(str) {
-//   let arr = str.match(/-./g).map(userObj => userObj.toUpperCase())
-//   return arr
-// }
-
-
-//let fff = str.match(/\W\w/g).map(userObj => userObj.toUpperCase());
-
-//let temp = newArr.join(fff[1].toUpperCase());
-
-
-// let upper = arr.map((userObj) => {
-//   return userObj.toUpperCase()
-// })

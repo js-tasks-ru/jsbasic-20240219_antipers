@@ -5,8 +5,7 @@ function showSalary(users, age) {
   string = names.map((userObj) => {
     return `${userObj["name"]}, ${userObj["balance"]}`
   })
-  let newArr = string.join('\n')
-  console.log(newArr)
+  let newArr = string.join('\n');
   return newArr;
 }
 const data = [
@@ -286,7 +285,5 @@ const data = [
 ];
 let names = [];
 let string = [];
-let result = showSalary(data, 40);
-
-
-
+ let result = showSalary(data, 40);
+ console.log(result)

@@ -1,3 +1,4 @@
+"use strict"
 function filterRange(arr, a, b) {
   if (a < b) { // для работы функции в обе стороны  (от 1 до 4) и (от 4 до 1)
     hiddenFilter(arr, a, b);
@@ -20,8 +21,8 @@ function hiddenFilter(arr, a, b) {
 }
 
 let arr = [5, 3, 8, 1];
-
-filterRange(arr, 1, 4);
+let filtered=[]
+filterRange(arr, 1,4 );
 console.log(filtered); // [3,1] (совпадающие значения)
 console.log(arr); // [5,3,8,1] (без изменений)
 

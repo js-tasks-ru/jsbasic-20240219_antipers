@@ -7,7 +7,7 @@ function getMinMax(str) {
   });
   result.min = Math.min(...numArr)
   result.max = Math.max(...numArr)  
-console.log(`min: ${result.min}, max: ${result.max}`)  
+return result 
 }
 
 

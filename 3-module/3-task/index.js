@@ -6,7 +6,7 @@ function camelize(str) {
 }
 
 let string = '-webkit-transition';
-console.log(camelize(string));
+camelize(string)
 
 /*
 вариант с костылями

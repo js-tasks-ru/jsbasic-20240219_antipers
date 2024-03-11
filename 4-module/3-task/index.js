@@ -1,5 +1,5 @@
 function highlight(table) {
-  for (let i = 0; i < table.rows.length; i++) {
+    for (let i = 0; i < table.rows.length; i++) {
     if (table.rows[i].cells[3].dataset.available == 'true') {
       table.rows[i].classList.add('available')
     }
@@ -13,8 +13,8 @@ function highlight(table) {
     } else {
       table.rows[i].classList.add('female')
     }
-    if ( table.rows[i].cells[1].textContent <18){
-      table.rows[i].style= "text-decoration: line-through"
+    if (table.rows[i].cells[1].textContent < 18) {
+      table.rows[i].style = "text-decoration: line-through"
     }
   }
 }

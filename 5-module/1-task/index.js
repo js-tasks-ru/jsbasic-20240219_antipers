@@ -4,6 +4,3 @@ function hideSelf() {
     event.target.hidden = true; });
 }
 
-
-
-

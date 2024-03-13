@@ -1,4 +1,5 @@
 function initCarousel() {
+
   let arrowRT = document.querySelector('.carousel__arrow_right');
   let arrowLT = document.querySelector('.carousel__arrow_left');
   let inner = document.querySelector('.carousel__inner');
@@ -85,3 +86,4 @@ function initCarousel() {
 //   arrowLT.style.display = 'none';
 // }
 //}
+

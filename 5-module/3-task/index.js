@@ -141,3 +141,4 @@ let arrowRT = document.querySelector('.carousel__arrow_right');
 //   arrowLT.style.display = 'none';
 // }
 //}
+

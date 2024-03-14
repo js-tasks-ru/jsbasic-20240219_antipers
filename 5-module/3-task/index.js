@@ -1,5 +1,61 @@
 function initCarousel() {
+  // с делегированием
+  let pushArrow = document.querySelector('.carousel');
   let arrowRT = document.querySelector('.carousel__arrow_right');
+  let arrowLT = document.querySelector('.carousel__arrow_left');
+  let inner = document.querySelector('.carousel__inner');
+  let counter = 1;
+  let offsetInner = inner.offsetWidth;
+
+  arrowLT.style.display = 'none';
+  arrowRT.style.display = '';
+
+  let arrowHandler = function (event) {
+    let leftClc = event.target.closest('.carousel__arrow_left');
+    let rightClc = event.target.closest('.carousel__arrow_right');
+
+    if (rightClc) {
+      if (counter === 1) {
+        inner.style.transform = `translateX(-${offsetInner}px)`;
+        arrowLT.style.display = '';
+        counter++;
+      }
+      else if (counter === 2) {
+        inner.style.transform = `translateX(-${offsetInner * 2}px)`;
+        counter++;
+      }
+      else if (counter === 3) {
+        inner.style.transform = `translateX(-${offsetInner * 3}px)`;
+        arrowRT.style.display = 'none';
+        counter++;
+      }
+    }
+
+    if (leftClc) {
+      if (counter === 4) {
+        counter--;
+        inner.style.transform = `translateX(-${offsetInner * (counter - 1)}px)`;
+        arrowRT.style.display = '';
+      }
+      else if (counter === 3) {
+        counter--;
+        inner.style.transform = `translateX(-${offsetInner * (counter - 1)}px)`;
+      }
+      else if (counter === 2) {
+        counter--;
+        inner.style.transform = `translateX(-${offsetInner * (counter - 1)}px)`;
+        arrowLT.style.display = 'none';
+      }
+
+    }
+  }
+  pushArrow.addEventListener('click', arrowHandler)
+}
+
+
+
+/* Без делегирования  CWITCH
+let arrowRT = document.querySelector('.carousel__arrow_right');
   let arrowLT = document.querySelector('.carousel__arrow_left');
   let inner = document.querySelector('.carousel__inner');
   let counter = 1;
@@ -47,7 +103,7 @@ function initCarousel() {
   }
   arrowRT.addEventListener('click', arrowRtHandler)
   arrowLT.addEventListener('click', arrowLtHandler)
-}
+  */
 
 
 // вариант с if

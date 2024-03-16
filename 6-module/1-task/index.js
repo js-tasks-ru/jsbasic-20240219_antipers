@@ -31,16 +31,16 @@ export default class UserTable {
     <td><button>X</button></td>
     </tr>
     `)
-    return this.elem;
+
   }
 
   addEventListeners() {
     this.elem.addEventListener('click', event => {
-       let btn = event.target.closest('button');
-       let tr= event.target.closest('tr');
-       if (btn) {
-         tr.remove();
-       }
+      let btn = event.target.closest('button');
+      let tr = event.target.closest('tr');
+      if (btn) {
+        tr.remove();
+      }
     })
   }
 }

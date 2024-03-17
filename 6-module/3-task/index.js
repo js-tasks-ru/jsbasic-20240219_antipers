@@ -66,25 +66,18 @@ export default class Carousel {
       }
     });
 
-    
-
-this.elem.addEventListener('click', event => {
-  let cartBtn = event.target.closest('.carousel__button');
-  if (cartBtn) {
-    
-    // let getIdElem= this.elem.querySelectorAll('.carousel__slide');
-    // let getIdFromElem= getIdElem.dataset.id;
-    // console.log(getIdFromElem)
-
-    let cartEvent = new CustomEvent("product-add", {
-      detail: this.slides[counter-1].id,
-      bubbles: true,
+    this.elem.addEventListener('click', event => {
+      let cartBtn = event.target.closest('.carousel__button');
+      if (cartBtn) {
+        let cartEvent = new CustomEvent("product-add", {
+          detail: this.slides[counter - 1].id,
+          bubbles: true,
+        });
+        this.elem.dispatchEvent(cartEvent);
+      }
     });
-    this.elem.dispatchEvent(cartEvent);
-  }
-});
-this.elem.addEventListener("product-add", () => {
-  console.log('Товар добавлен в корзину:' + event.detail);
-});
+    this.elem.addEventListener("product-add", () => {
+      console.log('Товар добавлен в корзину:' + event.detail);
+    });
   }
 }

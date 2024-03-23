@@ -61,14 +61,14 @@ export default class RibbonMenu {
           , event.target.classList.add('ribbon__item_active'))
           : event.target.classList.add('ribbon__item_active');
           
-          let chooseEvent= new CustomEvent('userChoose', {
-            detail:this.categories.id,
+          let chooseEvent= new CustomEvent('ribbon-select', {
+            detail:event.target.dataset.id,
             bubbles:true,
           });
           this.elem.dispatchEvent(chooseEvent);
       }
     });
-    this.elem.addEventListener('userChoose', (event)=>{
+    this.elem.addEventListener('ribbon-select', (event)=>{
       console.log('Пользователь выбрал категорию:' + event.detail);
     });
   }

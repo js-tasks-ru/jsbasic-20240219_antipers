@@ -114,9 +114,6 @@ export default class StepSlider {
         });
         this.elem.dispatchEvent(customEvent);
       }
-      this.elem.addEventListener('slider-change', (event) => {
-        console.log(event.detail);
-      });
     });
   }
 

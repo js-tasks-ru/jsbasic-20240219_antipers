@@ -53,7 +53,6 @@ export default class CartIcon {
         container + 20,
         client
       ) + 'px';
-      console.log(leftPosition);
       Object.assign(this.elem.style, {
         position: 'fixed',
         top: '50px',

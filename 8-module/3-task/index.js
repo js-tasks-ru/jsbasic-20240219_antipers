@@ -1,13 +1,11 @@
 export default class Cart {
-  cartItems = []; // [product: {...}, count: N]
+  cartItems = [];
 
   constructor(cartIcon) {
     this.cartIcon = cartIcon;
   }
 
   addProduct(product) {
-    this.product = product
-    console.log(this.product);
     if (!product) { return }
     let temp = {
       product: product,
@@ -20,22 +18,17 @@ export default class Cart {
     } else {
       this.cartItems.push(temp)
     }
-
-    console.log(this.cartItems);
-
-    this.getTotalCount();
-    this.getTotalPrice();
-    this.onProductUpdate(cartItem);
+    this.onProductUpdate(cartItem)
   }
 
   updateProductCount(productId, amount) {
-    this.cartItems.find((n) => n.product.id === productId).count += amount;
-    if (this.cartItems.find((n) => n.product.id === productId).count == 0) {
-      let toDel = this.cartItems.indexOf(this.cartItems.find((n) => n.product.id === productId));
-      this.cartItems.splice(toDel, 1);
+    let cartItem = this.cartItems.find((n) => n.product.id === productId)
+    cartItem.count += amount;
+    if (cartItem.count <= 0) {
+      let toDelIndex = this.cartItems.indexOf(cartItem);
+      this.cartItems.splice(toDelIndex, 1);
     }
-    this.getTotalCount();
-    this.getTotalPrice();
+    this.onProductUpdate(cartItem)
   }
 
   isEmpty() {
@@ -46,27 +39,33 @@ export default class Cart {
   }
 
   getTotalCount() {
+    /* 
+    почему-то не проходит проверку, хотя в консоли считает правильно
     let totalCount = 0
     for (let oneCount of this.cartItems) {
       totalCount += oneCount.count;
       console.log(totalCount);
-    }
-
+      return totalCount
+    } 
+    */
+    return this.cartItems.reduce((totalCount, currentCount) => totalCount + currentCount.count,
+      0
+    )
   }
 
   getTotalPrice() {
-    console.log('getTotalPrice');
-    let totalPrices = 0
-    for (let onePrice of this.cartItems) {
-      totalPrices += (onePrice.product.price) * onePrice.count;
-      console.log(totalPrices);
-    }
-
+    /*почему-то не проходит проверку, хотя в консоли считает правильно
+      let totalPrices = 0
+     for (let onePrice of this.cartItems) {
+       totalPrices += (onePrice.product.price * onePrice.count);
+       return totalPrices
+     } */
+    return this.cartItems.reduce((totalPrices, currentPrice) => totalPrices + (currentPrice.product.price * currentPrice.count),
+      0
+    )
   }
 
   onProductUpdate(cartItem) {
-    // реализуем в следующей задаче
-
 
     this.cartIcon.update(this);
   }

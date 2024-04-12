@@ -8,35 +8,59 @@ export default class Cart {
 
   constructor(cartIcon) {
     this.cartIcon = cartIcon;
-
     this.addEventListeners();
+
   }
 
   addProduct(product) {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    if (!product) { return }
+    let temp = {
+      product: product,
+      count: 1,
+    }
+    let cartItem = this.cartItems.find((n) => n.product.id === product.id);
+    if (cartItem) {
+      cartItem.count += 1;
+    } else {
+      this.cartItems.push(temp)
+    }
+    this.onProductUpdate(cartItem)
+    //console.log(this.cartItems);
   }
 
   updateProductCount(productId, amount) {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    let cartItem = this.cartItems.find((n) => n.product.id === productId)
+    cartItem.count += amount;
+    if (cartItem.count <= 0) {
+      let toDelIndex = this.cartItems.indexOf(cartItem);
+      this.cartItems.splice(toDelIndex, 1);
+    }
+    this.onProductUpdate(cartItem)
   }
 
   isEmpty() {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    for (let item of this.cartItems) {
+      return false
+    }
+    return true
   }
 
   getTotalCount() {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    return this.cartItems.reduce((totalCount, currentCount) => totalCount + currentCount.count,
+      0
+    )
   }
 
   getTotalPrice() {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    return this.cartItems.reduce((totalPrices, currentPrice) => totalPrices + (currentPrice.product.price * currentPrice.count),
+      0
+    )
   }
 
   renderProduct(product, count) {
     return createElement(`
-    <div class="cart-product" data-product-id="${
-      product.id
-    }">
+    <div class="cart-product" data-product-id="${product.id
+      }">
       <div class="cart-product__img">
         <img src="/assets/images/products/${product.image}" alt="product">
       </div>
@@ -74,8 +98,8 @@ export default class Cart {
           <div class="cart-buttons__info">
             <span class="cart-buttons__info-text">total</span>
             <span class="cart-buttons__info-price">€${this.getTotalPrice().toFixed(
-              2
-            )}</span>
+      2
+    )}</span>
           </div>
           <button type="submit" class="cart-buttons__button btn-group__button button">order</button>
         </div>
@@ -84,11 +108,52 @@ export default class Cart {
   }
 
   renderModal() {
-    // ...ваш код
+
+    let modal = new Modal();
+    this.modal = modal;
+    modal.setTitle('Your order');
+    this.modalBody = document.createElement('div')
+    let temp = this.cartItems.map((obj) => {
+      this.modalBody.append(this.renderProduct(obj.product, obj.count));
+    });
+    this.modalBody.append(this.renderOrderForm())
+    modal.setBody(this.modalBody);// удалил createElement, может понадобится вернуть для прохождения проверок
+
+    modal.open();
+
+    this.modalBody.addEventListener('click', (event) => {
+      let btnsMinus = event.target.closest('.cart-counter__button_minus');
+      let btnsPlus = event.target.closest('.cart-counter__button_plus');
+      let targetItem = event.target.closest('.cart-product').dataset.productId;
+      //let countItem = event.target.closest('.cart-counter__count')
+      let cartItem = this.cartItems.find((n) => n.product.id === targetItem)
+      if (btnsMinus) {
+        this.updateProductCount(targetItem, -1)
+
+      }
+      if (btnsPlus) {
+        this.updateProductCount(targetItem, 1)
+      }
+      this.onProductUpdate(cartItem)
+    })
   }
 
   onProductUpdate(cartItem) {
-    // ...ваш код
+    if (document.body.classList.contains('is-modal-open')) {
+      console.log(this.cartItems)
+
+      let productId = cartItem.product.id;
+      let modalBody = this.modalBody;
+      let productCount = modalBody.querySelector(`[data-product-id="${productId}"] .cart-counter__count`)
+      let productPrice = modalBody.querySelector(`[data-product-id="${productId}"] .cart-product__price`);
+      console.log(productPrice);
+      let infoPrice = modalBody.querySelector(`.cart-buttons__info-price`);
+      productCount.innerHTML = cartItem.count;
+      productPrice.innerHTML = `€${(cartItem.product.price * cartItem.count).toFixed(2)}`
+      infoPrice.innerHTML = `€${(this.getTotalPrice()).toFixed(2)}`;
+    }
+
+    if (this.getTotalPrice() === 0) { this.modal.close() }
 
     this.cartIcon.update(this);
   }

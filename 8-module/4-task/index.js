@@ -108,7 +108,6 @@ export default class Cart {
   }
 
   renderModal() {
-
     let modal = new Modal();
     this.modal = modal;
     modal.setTitle('Your order');
@@ -125,16 +124,20 @@ export default class Cart {
       let btnsMinus = event.target.closest('.cart-counter__button_minus');
       let btnsPlus = event.target.closest('.cart-counter__button_plus');
       let targetItem = event.target.closest('.cart-product').dataset.productId;
-      //let countItem = event.target.closest('.cart-counter__count')
+
       let cartItem = this.cartItems.find((n) => n.product.id === targetItem)
       if (btnsMinus) {
         this.updateProductCount(targetItem, -1)
-
       }
       if (btnsPlus) {
         this.updateProductCount(targetItem, 1)
       }
       this.onProductUpdate(cartItem)
+    })
+
+    let cartForm = document.querySelector('.cart-form')
+    cartForm.addEventListener('submit', (event) => {
+      this.onSubmit(event)
     })
   }
 
@@ -158,8 +161,30 @@ export default class Cart {
     this.cartIcon.update(this);
   }
 
-  onSubmit(event) {
-    // ...ваш код
+  async onSubmit(event) {
+    event.preventDefault();
+    let btnSubmit = this.modalBody.querySelector('button[type="submit"]');
+    let cartForm = document.querySelector('.cart-form');
+    let fd = new FormData(cartForm);
+    btnSubmit.classList.add('is-loading')
+    await fetch(`https://httpbin.org/post`, {
+      method: 'POST',
+      body: fd,
+    })
+
+    this.modal.setTitle("Success!");
+    btnSubmit.classList.remove('is-loading')
+    this.cartItems.length = 0;
+    this.cartIcon.update(this);
+    this.modalBody.innerHTML = `<div class="modal__body-inner">
+        <p>
+          Order successful! Your order is being cooked :) <br>
+          We’ll notify you about delivery time shortly.<br>
+          <img src="/assets/images/delivery.gif">
+        </p>
+      </div>`;
+
+
   };
 
   addEventListeners() {

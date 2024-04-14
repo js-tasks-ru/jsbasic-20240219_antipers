@@ -25,7 +25,7 @@ export default class Cart {
       this.cartItems.push(temp)
     }
     this.onProductUpdate(cartItem)
-    //console.log(this.cartItems);
+
   }
 
   updateProductCount(productId, amount) {
@@ -116,7 +116,7 @@ export default class Cart {
       this.modalBody.append(this.renderProduct(obj.product, obj.count));
     });
     this.modalBody.append(this.renderOrderForm())
-    modal.setBody(this.modalBody);// удалил createElement, может понадобится вернуть для прохождения проверок
+    modal.setBody(this.modalBody);
 
     modal.open();
 
@@ -143,13 +143,12 @@ export default class Cart {
 
   onProductUpdate(cartItem) {
     if (document.body.classList.contains('is-modal-open')) {
-      console.log(this.cartItems)
 
       let productId = cartItem.product.id;
       let modalBody = this.modalBody;
       let productCount = modalBody.querySelector(`[data-product-id="${productId}"] .cart-counter__count`)
       let productPrice = modalBody.querySelector(`[data-product-id="${productId}"] .cart-product__price`);
-      console.log(productPrice);
+
       let infoPrice = modalBody.querySelector(`.cart-buttons__info-price`);
       productCount.innerHTML = cartItem.count;
       productPrice.innerHTML = `€${(cartItem.product.price * cartItem.count).toFixed(2)}`
@@ -183,8 +182,6 @@ export default class Cart {
           <img src="/assets/images/delivery.gif">
         </p>
       </div>`;
-
-
   };
 
   addEventListeners() {

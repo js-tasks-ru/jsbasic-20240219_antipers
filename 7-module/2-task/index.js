@@ -38,9 +38,10 @@ export default class Modal {
   }
 
   setBody(element) {
-    this.element = element;
+    
     let text = this.elem.querySelector('.modal__body');
-    text.append(this.element)
+    text.innerHTML = "";
+    text.append(element);
   }
 
   close() {
@@ -56,8 +57,8 @@ export default class Modal {
       }
     })
 
-    document.addEventListener ('keydown', (event)=>{
-      if (event.code==='Escape') {this.close()}
+    document.addEventListener('keydown', (event) => {
+      if (event.code === 'Escape') { this.close() }
     })
 
   }

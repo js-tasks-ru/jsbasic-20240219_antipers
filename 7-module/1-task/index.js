@@ -68,9 +68,7 @@ export default class RibbonMenu {
           this.elem.dispatchEvent(chooseEvent);
       }
     });
-    this.elem.addEventListener('ribbon-select', (event)=>{
-      console.log('Пользователь выбрал категорию:' + event.detail);
-    });
+    
   }
 
 

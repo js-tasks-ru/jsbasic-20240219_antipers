@@ -33,24 +33,37 @@ export default class RibbonMenu {
     let ribbonArrowLT = this.elem.querySelector('.ribbon__arrow_left');
     let ribbonArrowRT = this.elem.querySelector('.ribbon__arrow_right');
     let inner = this.elem.querySelector('.ribbon__inner');
-
-    function checkCounter() {
+    /* function checkCounter() {
+      let scrollLeft = inner.scrollLeft;
+      let scrollRight = (inner.scrollWidth) - (inner.scrollLeft) - (inner.clientWidth);
+      if (scrollLeft === 0) {
+        ribbonArrowLT.classList.remove('ribbon__arrow_visible')
+      }
+      else {
+        ribbonArrowLT.classList.add('ribbon__arrow_visible')
+      }
+      if (scrollRight < 1) {
+        ribbonArrowRT.classList.remove('ribbon__arrow_visible')
+      } else {
+        ribbonArrowRT.classList.add('ribbon__arrow_visible')
+      }
+    } */
+    inner.addEventListener('scroll', (event) => {
+      event.preventDefault()
       let scrollLeft = inner.scrollLeft;
       let scrollRight = (inner.scrollWidth) - (inner.scrollLeft) - (inner.clientWidth);
       if (scrollLeft === 0) { ribbonArrowLT.classList.remove('ribbon__arrow_visible') }
       else { ribbonArrowLT.classList.add('ribbon__arrow_visible') }
       if (scrollRight < 1) { ribbonArrowRT.classList.remove('ribbon__arrow_visible') }
       else { ribbonArrowRT.classList.add('ribbon__arrow_visible') }
-    }
-
-    this.elem.addEventListener('click', (event) => {
-      let leftClc = event.target.closest('.ribbon__arrow_left');
-      let rightClc = event.target.closest('.ribbon__arrow_right');
-      if (leftClc) { inner.scrollBy(-350, 0) }
-      if (rightClc) { inner.scrollBy(350, 0) }
-      checkCounter()
     });
 
+    ribbonArrowLT.addEventListener("click", () => {
+      inner.scrollBy(-350, 0);
+    });
+    ribbonArrowRT.addEventListener("click", () => {
+      inner.scrollBy(350, 0);
+    });
 
     this.elem.addEventListener('click', (event) => {
       event.preventDefault();
@@ -60,16 +73,13 @@ export default class RibbonMenu {
         (previousTarget) ? (previousTarget.classList.remove('ribbon__item_active')
           , event.target.classList.add('ribbon__item_active'))
           : event.target.classList.add('ribbon__item_active');
-          
-          let chooseEvent= new CustomEvent('ribbon-select', {
-            detail:event.target.dataset.id,
-            bubbles:true,
-          });
-          this.elem.dispatchEvent(chooseEvent);
+
+        let chooseEvent = new CustomEvent('ribbon-select', {
+          detail: event.target.dataset.id,
+          bubbles: true,
+        });
+        this.elem.dispatchEvent(chooseEvent);
       }
     });
-    
   }
-
-
 }

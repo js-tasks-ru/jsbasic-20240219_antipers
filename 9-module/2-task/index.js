@@ -28,6 +28,7 @@ export default class Main {
     let sliderHolder = document.querySelector('[data-slider-holder]')
     sliderHolder.append(stepSlider.elem)
 
+
     let cartIcon = new CartIcon();
     let cartIconHolder = document.querySelector('[data-cart-icon-holder]');
     cartIconHolder.append(cartIcon.elem);
@@ -43,8 +44,22 @@ export default class Main {
     productHolder.innerHTML = '';
     productHolder.append(productsGrid.elem);
 
+    document.addEventListener('click', (event) => {
+      let button = event.target.closest('.card__button');
+      if (!button) {
+        return;
+      } else {
+        let addProductId = button.dataset.addProductId;
+        let productToAdd = dataProducts.find((obj) => obj.id === addProductId);
+        if (productToAdd) {
+          cart.addProduct(productToAdd);
+        }
+      }
+    })
+
     this.productsGrid = productsGrid;
     this.stepSlider = stepSlider;
+
     this.ribbonMenu = ribbonMenu;
 
     productsGrid.updateFilter({
@@ -53,40 +68,34 @@ export default class Main {
       maxSpiciness: this.stepSlider.value,
       category: this.ribbonMenu.value
     });
+
     document.body.addEventListener('product-add', (event) => {
-      let prodToAdd = dataProducts.find((obj) => {
+      let productToAdd = dataProducts.find((obj) => {
         return event.detail === obj.id
-      })
-      cart.addProduct(prodToAdd)
+      });
+      if (productToAdd)
+        cart.addProduct(productToAdd)
     });
 
     document.body.addEventListener('slider-change', (event) => {
-      let value = event.detail
-      this.productsGrid.updateFilter({ maxSpiciness: value })
-    })
+      let value = event.detail;
+      this.productsGrid.updateFilter({ maxSpiciness: value });
+      
+    });
 
     document.body.addEventListener('ribbon-select', (event) => {
       let categoryId = event.detail;
       this.productsGrid.updateFilter({ category: categoryId })
-    })
+    });
 
     document.querySelector("#nuts-checkbox").addEventListener('change', (event) => {
       let toCheckNuts = event.target.checked
       this.productsGrid.updateFilter({ noNuts: toCheckNuts })
-    })
+    });
 
     document.querySelector("#vegeterian-checkbox").addEventListener('change', (event) => {
       let toCheckVeg = event.target.checked;
       this.productsGrid.updateFilter({ vegeterianOnly: toCheckVeg })
-    })
-
-
-
-
-
-
-
-
-
+    });
   }
 }

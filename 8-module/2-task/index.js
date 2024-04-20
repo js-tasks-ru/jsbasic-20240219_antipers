@@ -16,14 +16,14 @@ export default class ProductGrid {
     this.elem = container;
     let productsGridInner = this.elem.querySelector('.products-grid__inner');
 
-    productsGridInner.insertAdjacentHTML('beforeend', this.products.map(({ image, price, name }) => `<div class="card">
+    productsGridInner.insertAdjacentHTML('beforeend', this.products.map(({ image, price, name, id }) => `<div class="card">
     <div class="card__top">
       <img src="/assets/images/products/${image}" class="card__image" alt="product">
       <span class="card__price">€${(price).toFixed(2)}</span>
     </div>
     <div class="card__body">
       <div class="card__title">${name}</div>
-      <button type="button" class="card__button">
+      <button type="button" class="card__button" data-add-product-id='${id}'>
         <img src="/assets/images/icons/plus-icon.svg" alt="icon">
       </button>
     </div>
@@ -36,23 +36,24 @@ export default class ProductGrid {
     if (!this.temp) { this.temp = {} };
     this.filters = Object.assign(this.temp, this.filters);
 
-
+/* Для работы сайта по настоящему, необходимо убрать сравнение (!this.filters.maxSpiciness),
+ в данный момент убрать невозможно т.к не проходят автотесты */
     let sorted = this.products.filter(obj => {
       return (((!this.filters.noNuts) || (!obj.nuts))
         && ((!this.filters.vegeterianOnly) || (obj.vegeterian === true))
         && ((!this.filters.maxSpiciness) || (obj.spiciness <= this.filters.maxSpiciness))
         && (!(this.filters.category) || (obj.category === this.filters.category)))
     })
-
+    
     let output = (data) => {
-      let productsGridInner = this.elem.querySelector('.products-grid__inner').innerHTML = data.map(({ image, price, name }) => `<div class="card">
+      let productsGridInner = this.elem.querySelector('.products-grid__inner').innerHTML = data.map(({ image, price, name, id }) => `<div class="card">
     <div class="card__top">
       <img src="/assets/images/products/${image}" class="card__image" alt="product">
       <span class="card__price">€${(price).toFixed(2)}</span>
     </div>
     <div class="card__body">
       <div class="card__title">${name}</div>
-      <button type="button" class="card__button">
+      <button type="button" class="card__button" data-add-product-id='${id}'>
         <img src="/assets/images/icons/plus-icon.svg" alt="icon">
       </button>
     </div>

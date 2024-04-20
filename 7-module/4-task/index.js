@@ -9,113 +9,103 @@ export default class StepSlider {
     let slider = document.createElement('DIV');
     slider.classList.add('slider');
     slider.insertAdjacentHTML("beforeend", `  
-    <div class="slider__thumb" style="left: 50%;">
-      <span class="slider__value">2</span>
-    </div>
-    
-    <div class="slider__progress" style="width: 50%;"></div>
-    
+    <div class="slider__thumb" style="left: 75%;">
+      <span class="slider__value">${this.value}</span>
+    </div>    
+    <div class="slider__progress" style="width: 75%;"></div>    
     <div class="slider__steps">
-      <span class="slider__step-active"></span>      
+      <span class="slider__step-active"></span>  
+      ${"<span></span>".repeat(this.steps - 1)}    
     </div>
   `)
-    let stepsNum = slider.querySelector('.slider__steps')
-    for (let index = 0; index < this.steps - 1; index++) {
-      stepsNum.insertAdjacentHTML('beforeEnd', `<span></span>`)
-    }
     this.elem = slider
   }
 
 
   addEventListeners() {
     this.elem.addEventListener('click', (event) => {
-      let targetSlider = event.target.closest('.slider');
-      let previousTarget = this.elem.querySelector('.slider__step-active');
-      if (targetSlider) {
-        if (previousTarget) { previousTarget.classList.remove('slider__step-active') }
-        let left = event.clientX - this.elem.getBoundingClientRect().left;
-        let leftRelative = left / targetSlider.offsetWidth;
-        let approximateValue = leftRelative * (this.steps - 1)
-        let value = Math.round(approximateValue)
-
-        this.value = value;
-        let spanList = this.elem.querySelectorAll('.slider__steps span');
-        spanList[this.value].classList.add('slider__step-active')
-
-        let currentValue = this.elem.querySelector('.slider__value');
-        currentValue.textContent = this.value;
-
-        let thumb = this.elem.querySelector('.slider__thumb');
-        let progress = this.elem.querySelector('.slider__progress');
-        let leftPercents = (100 / (this.steps - 1)) * this.value;
-        thumb.style.left = `${leftPercents}%`;
-        progress.style.width = `${leftPercents}%`;
-
-        let customEvent = new CustomEvent('slider-change', {
-          detail: this.value,
-          bubbles: true,
-        });
-        this.elem.dispatchEvent(customEvent);
-      }
+      this.sliderByClick(event)
     });
 
-
     let thumb = this.elem.querySelector('.slider__thumb');
+    let progress = this.elem.querySelector('.slider__progress');
+    let spanList = this.elem.querySelectorAll('.slider__steps span');
+
+    globalThis.thumb = thumb;
+    globalThis.progress = progress;
+    globalThis.spanList = spanList;
+
     thumb.ondragstart = () => false;
 
-    this.elem.addEventListener('pointerdown', (event) => {
+    thumb.addEventListener('pointerdown', (event) => {
       event.preventDefault();
-      let progress = this.elem.querySelector('.slider__progress');
-      let spanList = this.elem.querySelectorAll('.slider__steps span');
       this.elem.classList.add('slider_dragging');
-      thumb.style.position = 'absolute';
-      thumb.style.zIndex = 99999999;     
+      document.addEventListener('pointermove', this.mouseMove);
+      document.addEventListener('pointerup', this.mouseUp);
+    });
+  }
+
+  mouseMove = (event) => {
+    let left = event.clientX - this.elem.getBoundingClientRect().left;
+    let leftRelative = left / this.elem.offsetWidth;
+    if (leftRelative < 0) { leftRelative = 0 }
+    if (leftRelative > 1) { leftRelative = 1 }
+
+    let approximateValue = leftRelative * (this.steps - 1);
+    let value = Math.round(approximateValue);
+
+    let leftPercents = 100 * leftRelative;
+    globalThis.progress.style.width = `${leftPercents}%`;
+    globalThis.thumb.style.left = `${leftPercents}%`;
+    this.updateSlider(value);
+  }
 
 
-      let mouseMove = (event) => {
-        event.preventDefault();
+  mouseUp = (event) => {
+    let finalPercents = (100 / (this.steps - 1)) * this.value;
+    globalThis.thumb.style.left = `${finalPercents}%`;
+    globalThis.progress.style.width = `${finalPercents}%`;
+    this.updateSlider(this.value);
 
-        let left = event.clientX - this.elem.getBoundingClientRect().left
-        let leftRelative = left / this.elem.offsetWidth;
-        if (leftRelative < 0) { leftRelative = 0 }
-        if (leftRelative > 1) { leftRelative = 1 }
+    let customEvent = new CustomEvent('slider-change', {
+      detail: this.value,
+      bubbles: true,
+    });
+    this.elem.dispatchEvent(customEvent);
 
+    this.elem.classList.remove('slider_dragging');
+    document.removeEventListener('pointermove', this.mouseMove);
+    document.removeEventListener('pointerup', this.mouseUp);
+  }
 
-        let approximateValue = leftRelative * (this.steps - 1);
-        let value = Math.round(approximateValue);
+  updateSlider(value) {
+    let previousTarget = this.elem.querySelector('.slider__step-active');
+    if (previousTarget) { previousTarget.classList.remove('slider__step-active') }
 
-        let previousTarget = this.elem.querySelector('.slider__step-active');
-        if (previousTarget) { previousTarget.classList.remove('slider__step-active') }
-        spanList[value].classList.add('slider__step-active')
+    spanList[value].classList.add('slider__step-active');
+    let currentValue = this.elem.querySelector('.slider__value');
+    currentValue.textContent = value;
+    this.value = value;
+  }
 
-        let currentValue = this.elem.querySelector('.slider__value');
-        currentValue.textContent = value;
-        this.value = value
+  sliderByClick(event) {
+    let targetSlider = event.target.closest('.slider');
+    if (targetSlider) {
+      let left = event.clientX - this.elem.getBoundingClientRect().left;
+      let leftRelative = left / targetSlider.offsetWidth;
+      let approximateValue = leftRelative * (this.steps - 1);
+      let value = Math.round(approximateValue);
 
-        let leftPercents = 100 * leftRelative;
-        progress.style.width = `${leftPercents}%`;
-        thumb.style.left = `${leftPercents}%`;
-      }
-      document.addEventListener('pointermove', mouseMove);
+      let leftPercents = (100 / (this.steps - 1)) * value;
+      thumb.style.left = `${leftPercents}%`;
+      progress.style.width = `${leftPercents}%`;
 
-      let mouseUp = (event) => {
-        event.preventDefault();
-        let finalPercents = (100 / (this.steps - 1)) * this.value;
-
-        thumb.style.left = `${finalPercents}%`;
-        progress.style.width = `${finalPercents}%`;
-
-        let customEvent = new CustomEvent('slider-change', {
-          detail: this.value,
-          bubbles: true,
-        });
-        this.elem.dispatchEvent(customEvent);
-
-        document.removeEventListener('pointermove', mouseMove);
-        this.elem.onpointerup = null;
-        this.elem.classList.remove('slider_dragging');
-      }
-      document.addEventListener('pointerup', mouseUp);
-    })
+      this.updateSlider(value)
+      let customEvent = new CustomEvent('slider-change', {
+        detail: this.value,
+        bubbles: true,
+      });
+      this.elem.dispatchEvent(customEvent);
+    }
   }
 }
